@@ -5,6 +5,7 @@ import { useState } from "react";
 import TipoDeRegistro from "./_components/TipoDeRegistro";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import LocalData from "./_components/LocalData";
 
 
 export default function Home() {
@@ -32,7 +33,7 @@ export default function Home() {
         return <TipoDeRegistro updateAtpvData={updateAtpvData} handleNext={handleNext}/>
       case 1:
         console.log(atpvData);
-        return <div>page 2</div>
+        return <LocalData />
       case 2:
         return <div></div>
       case 3:
@@ -70,5 +71,5 @@ export default function Home() {
         <Button onClick={handleBack} >Voltar</Button>
         <Button onClick={handleNext} >Proximo</Button>
       </div>
-  <LocalizationProvider />
+  </LocalizationProvider>
 }
