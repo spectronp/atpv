@@ -23,6 +23,7 @@ const TipoDeRegistro = ({ updateAtpvData, handleNext }) => {
 
     const handleSelect = (escolhido) => {
         updateAtpvData({ tipoRegistro: escolhido });
+        handleNext();
     }
 
     return <Table >

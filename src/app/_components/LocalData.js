@@ -1,11 +1,61 @@
-import { InputLabel, TextField } from "@mui/material";
+import { InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
+import { useEffect, useMemo, useState } from "react";
+import useSWR from "swr";
 
-const LocalData = () => {
+const LocalData = ({ atpvData, updateAtpvData }) => {
+    const fetcher = (...args) => fetch(...args).then((r) => r.json());
+    const { data, error, isLoading } = useSWR("https://servicodados.ibge.gov.br/api/v1/localidades/municipios", fetcher);
+    const [dataCompra, setDataCompra] = useState(atpvData.current.dataVenda ?? null);
+    const [valorVeiculo, setValorVeiculo] = useState(atpvData.current.valorVeiculo ?? 0);
+    const [selectedUf, setSelectedUf] = useState(atpvData.current.uf ?? "");
+    const [selectedCity, setSelectedCity] = useState(atpvData.current.cidade ?? "");
+    const cidades = useMemo(
+        () => data ? data.map(city => ( {nome: city.nome, uf: city["regiao-imediata"]["regiao-intermediaria"]["UF"]["sigla"]} )) : null,
+        [data]
+    )
+
+    const cidadesDaUf = useMemo(() => (
+       data ? cidades.filter(city => city.uf == selectedUf) : []
+    ), [selectedUf])
+
+    if(isLoading) return <div>Carregando...</div>
+    if(error) {
+        console.log(error)
+        return <div>deu ruim</div>
+    }
+
+    const estadosBrasil = [
+    "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO",
+    "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI",
+    "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO"
+    ];
+    
+    const handleUfChange = e => {
+        setSelectedUf(e.target.value);
+    }
+    const handleCityChange = e => {
+        setSelectedCity(e.target.value);
+    }
+    
+    updateAtpvData({
+        dataVenda: dataCompra,
+        valorVeiculo: valorVeiculo,
+        uf: selectedUf,
+        cidade: selectedCity,
+    })
+    
     return <>
         <InputLabel>Data da Venda</InputLabel>
-       <DatePicker />  
-       <TextField label="Valor do Veiculo" />
+       <DatePicker value={dataCompra} onChange={newData => {setDataCompra(newData)}} />  
+       <TextField label="Valor do Veiculo" value={valorVeiculo} onChange={e => {setValorVeiculo(e.target.value)}}/>
+       <InputLabel>Cidade/UF</InputLabel>
+       <Select label="UF" value={selectedUf} onChange={handleUfChange}>
+            {estadosBrasil.map(estado => <MenuItem value={estado}>{estado}</MenuItem>)}
+       </Select>
+        <Select value={selectedCity} label="Cidade" onChange={handleCityChange}>
+            {cidadesDaUf.map(cidade => <MenuItem value={cidade.nome}>{cidade.nome}</MenuItem>)}
+       </Select>
     </>
 }
 

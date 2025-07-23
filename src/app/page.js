@@ -1,22 +1,52 @@
 'use client';
 
 import { Button, Step, StepButton, StepLabel, Stepper } from "@mui/material";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import TipoDeRegistro from "./_components/TipoDeRegistro";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import LocalData from "./_components/LocalData";
+import DadosVeiculo from "./_components/DadosDoVeiculo";
+import Pessoa from "./_components/Pessoa";
+import _ from "lodash";
+import Vendedor from "./_components/Vendedor";
+import Comprador from "./_components/Comprador";
+import Finalizacao from "./_components/Finalizacao";
 
 
 export default function Home() {
   const [currentStep, setCurrentStep] = useState(0);
-  const [atpvData, setAtpvData] = useState({
+  const atpvPessoa = {
+    tipo: null,
+    nome: null,
+    cpfCnpj: null,
+    email: null,
+    cep: null,
+    endereco: null,
+    numero: null,
+  }
+  const atpvData = useRef({
     tipoRegistro: null,
+    dataVenda: null,
+    valorVeiculo: null,
+    cidade: null,
+    uf: null,
+    placa: null,
+    renavam: null,
+    chassi: null,
+    crv: null,
+    dataEmissaoCrv: null,
+    numeroViaCrv: null,
+    codigoSegurancaCrv: null,
+    anoFabricacao: null,
+    anoModelo: null,
+    quilometragem: null,
+    comprador: {...atpvPessoa},
+    vendedor: {...atpvPessoa},
   });
  
   const updateAtpvData = (newData) => {
-    setAtpvData({...atpvData, ...newData});
-    handleNext();
+    _.merge(atpvData.current, newData)
   }
 
   const handleNext = () => {
@@ -32,16 +62,15 @@ export default function Home() {
       case 0:
         return <TipoDeRegistro updateAtpvData={updateAtpvData} handleNext={handleNext}/>
       case 1:
-        console.log(atpvData);
-        return <LocalData />
+        return <LocalData atpvData={atpvData} updateAtpvData={updateAtpvData} />
       case 2:
-        return <div></div>
+        return <DadosVeiculo atpvData={atpvData} updateAtpvData={updateAtpvData}/>
       case 3:
-        return <div></div>
+        return <Vendedor atpvData={atpvData}  updateAtpvData={updateAtpvData} />
       case 4:
-        return <div></div>
+        return <Comprador atpvData={atpvData}  updateAtpvData={updateAtpvData} />
       case 5:
-        return <div></div>
+        return <Finalizacao atpvData={atpvData}/>
     }
   }
 
