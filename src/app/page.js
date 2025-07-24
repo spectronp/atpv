@@ -1,17 +1,17 @@
 'use client';
 
-import { Button, Step, StepButton, StepLabel, Stepper } from "@mui/material";
+import { Button, Step, StepLabel, Stepper } from "@mui/material";
 import { useRef, useState } from "react";
 import TipoDeRegistro from "./_components/TipoDeRegistro";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import LocalData from "./_components/LocalData";
 import DadosVeiculo from "./_components/DadosDoVeiculo";
-import Pessoa from "./_components/Pessoa";
 import _ from "lodash";
 import Vendedor from "./_components/Vendedor";
 import Comprador from "./_components/Comprador";
 import Finalizacao from "./_components/Finalizacao";
+import { pushAtpvData } from "@/server/functions";
 
 
 export default function Home() {
@@ -50,6 +50,12 @@ export default function Home() {
   }
 
   const handleNext = () => {
+    if(currentStep == 5) {
+      console.log(atpvData.current)
+      pushAtpvData(atpvData.current)
+      console.log("push atpv called")
+      return
+    }
     setCurrentStep(currentStep + 1);
   }
 

@@ -26,7 +26,6 @@ const DadosVeiculo = ({ atpvData, updateAtpvData }) => {
         anoModelo: anoModelo,
         quilometragem: quilometragem,
     })
-    console.log(atpvData.current)
 
     return <Stack spacing={2}>
         <TextField value={placa} onChange={e => {setPlaca(e.target.value)}} label="Placa" size="small"/>
