@@ -47,12 +47,21 @@ export default function Home() {
  
   const updateAtpvData = (newData) => {
     _.merge(atpvData.current, newData)
+    //console.log(atpvData.current)
   }
 
   const handleNext = () => {
     if(currentStep == 5) {
-      console.log(atpvData.current)
+      console.log(atpvData.current);
       pushAtpvData(atpvData.current)
+        .then(res => {
+          console.log("normal")
+          console.dir(res)
+        })
+        .catch(err => {
+          console.log("ERRO")
+          console.dir(err)
+        })
       console.log("push atpv called")
       return
     }

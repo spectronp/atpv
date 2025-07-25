@@ -26,10 +26,10 @@ const Vendedor = ({ atpvData, updateAtpvData }) => {
 
     return <>
         <Select value={tipoPessoa} onChange={e => {setTipoPessoa(e.target.value)}} label="Tipo de Pessoa">
-            <MenuItem value="F" >Fisica</MenuItem>
-            <MenuItem value="J" >Juridica</MenuItem>
+            <MenuItem value="fisica" >Fisica</MenuItem>
+            <MenuItem value="juridica" >Juridica</MenuItem>
         </Select>
-        <TextField value={cpfCnpj} onChange={e => {setCpfCnpj(e.target.value)}}label="CPF" />
+        <TextField value={cpfCnpj} onChange={e => {setCpfCnpj(e.target.value)}}label="CPF/CNPJ" />
         <TextField value={nome} onChange={e => {setNome(e.target.value)}}label="Nome" />
         <TextField value={email} onChange={e => {setEmail(e.target.value)}}label="Email" />
         <TextField value={cep} onChange={e => {setCep(e.target.value)}}label="CEP" />

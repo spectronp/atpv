@@ -7,7 +7,7 @@ const DadosVeiculo = ({ atpvData, updateAtpvData }) => {
     const [renavam, setRenavam] = useState(atpvData.current.renavam ?? "");
     const [chassi, setChassi] = useState(atpvData.current.chassi ?? "");
     const [crv, setCrv] = useState(atpvData.current.crv ?? "");
-    const [dataEmissaoCrv, setDataEmissaoCrv] = useState(atpvData.current.emissaoCrv ?? null);
+    const [dataEmissaoCrv, setDataEmissaoCrv] = useState(atpvData.current.dataEmissaoCrv ?? null);
     const [numeroViaCrv, setNumeroViaCrv] = useState(atpvData.current.numeroViaCrv ?? "");
     const [codigoSegurancaCrv, setCodigoSegurancaCrv] = useState(atpvData.current.codigoSegurancaCrv ?? "");
     const [anoFabricacao, setAnoFabricacao] = useState(atpvData.current.anoFabricacao ?? "");
@@ -19,7 +19,7 @@ const DadosVeiculo = ({ atpvData, updateAtpvData }) => {
         renavam: renavam,
         chassi: chassi,
         crv: crv,
-        dataEmissaoCrv: dataEmissaoCrv,
+        dataEmissaoCrv: dataEmissaoCrv ? dataEmissaoCrv.format("DD/MM/YYYY") : null,
         numeroViaCrv: numeroViaCrv,
         codigoSegurancaCrv: codigoSegurancaCrv,
         anoFabricacao: anoFabricacao,
@@ -32,7 +32,7 @@ const DadosVeiculo = ({ atpvData, updateAtpvData }) => {
         <TextField value={renavam} onChange={e => {setRenavam(e.target.value)}} label="Renavam" size="small"/>
         <TextField value={chassi} onChange={e => {setChassi(e.target.value)}} label="Chassi" size="small"/>
         <TextField value={crv} onChange={e => {setCrv(e.target.value)}} label="CRV" size="small"/>
-        <DatePicker label="Data Emissao CRV" />
+        <DatePicker label="Data Emissao CRV" onChange={newDate => {setDataEmissaoCrv(newDate)}} />
         <TextField value={numeroViaCrv} onChange={e => {setNumeroViaCrv(e.target.value)}} label="Numero da Via CRV" size="small"/>
         <TextField value={codigoSegurancaCrv} onChange={e => {setCodigoSegurancaCrv(e.target.value)}} label="Codigo de Seguranca CRV" size="small"/>
         <TextField value={anoFabricacao} onChange={e => {setAnoFabricacao(e.target.value)}} label="Ano Fabricacao" size="small"/>

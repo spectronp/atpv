@@ -11,6 +11,7 @@ const Pessoa = ({ tipo, atpvData, updateAtpvData }) => {
     const [numero, setNumero] = useState(atpvData.current[tipo].numero ?? "")
     
     useEffect(() => {
+        console.log("pessoa useEffect")
         updateAtpvData({
             [tipo]: {
                 tipo: tipoPessoa,
@@ -23,11 +24,11 @@ const Pessoa = ({ tipo, atpvData, updateAtpvData }) => {
             },
         });
     }, [tipoPessoa, cpfCnpj, nome, email, cep, endereco, numero]);
-    
+    console.log('render pessoa')
     return <>
         <Select key={tipo + 'tipo'} value={tipoPessoa} onChange={e => {setTipoPessoa(e.target.value)}} label="Tipo de Pessoa">
-            <MenuItem value="F" >Fisica</MenuItem>
-            <MenuItem value="J" >Juridica</MenuItem>
+            <MenuItem value="dfwef" >Fisica</MenuItem>
+            <MenuItem value="fewfw" >Juridica</MenuItem>
         </Select>
         <TextField key={tipo + 'cpfcnpj'} value={cpfCnpj} onChange={e => {setCpfCnpj(e.target.value)}}label="CPF/CNPJ" />
         <TextField key={tipo + 'nome'} value={nome} onChange={e => {setNome(e.target.value)}}label="Nome" />

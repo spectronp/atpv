@@ -51,7 +51,7 @@ const Finalizacao = ({ atpvData }) => {
             <TableCell >{dayjs.isDayjs(value) ? value.format("DD/MM/YYYY") : value}</TableCell>
         </TableRow>)
     }
-
+    console.log('render final')
     return <Stack direction="row" spacing={5} sx={{ width: "90%" }}>
     <Table size="small" sx={{ width: "40%" }}>
         <TableHead>

@@ -1,12 +1,13 @@
 import { InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
+import dayjs from "dayjs";
 import { useEffect, useMemo, useState } from "react";
 import useSWR from "swr";
 
 const LocalData = ({ atpvData, updateAtpvData }) => {
     const fetcher = (...args) => fetch(...args).then((r) => r.json());
     const { data, error, isLoading } = useSWR("https://servicodados.ibge.gov.br/api/v1/localidades/municipios", fetcher);
-    const [dataCompra, setDataCompra] = useState(atpvData.current.dataVenda ?? null);
+    const [dataCompra, setDataCompra] = useState(atpvData.current.dataVenda ? dayjs(atpvData.current.dataVenda, "DD/MM/YYYY") : null);
     const [valorVeiculo, setValorVeiculo] = useState(atpvData.current.valorVeiculo ?? 0);
     const [selectedUf, setSelectedUf] = useState(atpvData.current.uf ?? "");
     const [selectedCity, setSelectedCity] = useState(atpvData.current.cidade ?? "");
@@ -39,7 +40,7 @@ const LocalData = ({ atpvData, updateAtpvData }) => {
     }
     
     updateAtpvData({
-        dataVenda: dataCompra,
+        dataVenda: dataCompra ? dataCompra.format("DD/MM/YYYY") : null,
         valorVeiculo: valorVeiculo,
         uf: selectedUf,
         cidade: selectedCity,
