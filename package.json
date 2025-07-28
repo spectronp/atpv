@@ -23,7 +23,8 @@
     "postgres": "^3.4.7",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "swr": "^2.3.4"
+    "swr": "^2.3.4",
+    "zod": "^4.0.10"
   },
   "devDependencies": {
     "drizzle-kit": "^0.31.4"
