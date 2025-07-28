@@ -1,5 +1,6 @@
 import { Stack, TextField } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
+import dayjs from "dayjs";
 import { useState } from "react";
 
 const DadosVeiculo = ({ atpvData, updateAtpvData }) => {
@@ -19,7 +20,7 @@ const DadosVeiculo = ({ atpvData, updateAtpvData }) => {
         renavam: renavam,
         chassi: chassi,
         crv: crv,
-        dataEmissaoCrv: dataEmissaoCrv ? dataEmissaoCrv.format("DD/MM/YYYY") : null,
+        dataEmissaoCrv: dayjs.isDayjs(dataEmissaoCrv) ? dataEmissaoCrv.format("DD/MM/YYYY") : dataEmissaoCrv,
         numeroViaCrv: numeroViaCrv,
         codigoSegurancaCrv: codigoSegurancaCrv,
         anoFabricacao: anoFabricacao,
