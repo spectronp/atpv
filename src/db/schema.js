@@ -1,8 +1,9 @@
-import { pgEnum, pgTable, char, text, numeric, integer, serial, date, decimal } from "drizzle-orm/pg-core";
+import { pgEnum, pgTable, char, text, numeric, integer, serial, date, decimal, bigserial } from "drizzle-orm/pg-core";
 
 export const tipoPessoaEnum = pgEnum('tipo_pessoa', ['fisica', 'juridica'])
 
 export const atpv = pgTable('atpv', {
+    id: bigserial({mode: "number"}),
     tipoRegistro: text("tipo"),
     dataVenda: date("data_venda"),
     valorVeiculo: decimal("valor_veiculo"),
@@ -23,6 +24,7 @@ export const atpv = pgTable('atpv', {
 })
 
 export const pessoa = pgTable('pessoa', {
+    id: bigserial({mode: "number"}),
     tipo: tipoPessoaEnum(),
     nome: text(),
     cpfCnpj: text("cpf_cnpj"),
