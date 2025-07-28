@@ -16,6 +16,7 @@ import { pushAtpvData } from "@/server/functions";
 
 export default function Home() {
   const [currentStep, setCurrentStep] = useState(0);
+  const [pushResult, setPushResult] = useState();
   const atpvPessoa = {
     tipo: null,
     nome: null,
@@ -47,22 +48,17 @@ export default function Home() {
  
   const updateAtpvData = (newData) => {
     _.merge(atpvData.current, newData)
-    //console.log(atpvData.current)
   }
 
   const handleNext = () => {
     if(currentStep == 5) {
-      console.log(atpvData.current);
       pushAtpvData(atpvData.current)
         .then(res => {
-          console.log("normal")
-          console.dir(res)
+          setPushResult(res)
         })
         .catch(err => {
-          console.log("ERRO")
-          console.dir(err)
+          setPushResult(err)
         })
-      console.log("push atpv called")
       return
     }
     setCurrentStep(currentStep + 1);
@@ -85,7 +81,7 @@ export default function Home() {
       case 4:
         return <Comprador atpvData={atpvData}  updateAtpvData={updateAtpvData} />
       case 5:
-        return <Finalizacao atpvData={atpvData}/>
+        return <Finalizacao atpvData={atpvData} pushResult={pushResult} />
     }
   }
 
