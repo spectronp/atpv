@@ -2,38 +2,8 @@
 
 import { db } from "@/db";
 import { atpv, pessoa } from "@/db/schema";
+import { Atpv, Pessoa } from "@/validation";
 import { eq } from "drizzle-orm";
-import * as z from "zod";
-
-const Pessoa = z.object({
-    tipo: z.literal(["fisica", "juridica"]),
-    nome: z.string(),
-    cpfCnpj: z.string(),
-    email: z.email(),
-    cep: z.string(),
-    endereco: z.string(),
-    numero: z.coerce.bigint()
-})
-
-const Atpv = z.object({
-    tipoRegistro: z.string(),
-    dataVenda: z.string(), // NOTE: could use regex for DD/MM/YYYY
-    valorVeiculo: z.coerce.bigint(),
-    cidade: z.string(),
-    uf: z.string().length(2).uppercase(),
-    placa: z.string(),
-    renavam: z.string(),
-    chassi: z.string(),
-    crv: z.string(),
-    dataEmissaoCrv: z.string(),
-    numeroViaCrv: z.string(), // TODO: this should be a number
-    codigoSegurancaCrv: z.string(),
-    anoFabricacao: z.coerce.number(), // TODO: could set a max and minimum
-    anoModelo: z.coerce.number(),
-    quilometragem: z.coerce.number(),
-    vendedor: Pessoa,
-    comprador: Pessoa,
-})
 
 export const pushAtpvData = async atpvData => {
     const valid = Atpv.safeParse(atpvData)
