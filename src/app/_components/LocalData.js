@@ -1,8 +1,11 @@
+import { getHelpText, getIsValid } from "@/utils";
+import { Atpv } from "@/validation";
 import { InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { useEffect, useMemo, useState } from "react";
 import useSWR from "swr";
+import z from "zod";
 
 const LocalData = ({ atpvData, updateAtpvData }) => {
     const fetcher = (...args) => fetch(...args).then((r) => r.json());
@@ -11,6 +14,7 @@ const LocalData = ({ atpvData, updateAtpvData }) => {
     const [valorVeiculo, setValorVeiculo] = useState(atpvData.current.valorVeiculo ?? 0);
     const [selectedUf, setSelectedUf] = useState(atpvData.current.uf ?? "");
     const [selectedCity, setSelectedCity] = useState(atpvData.current.cidade ?? "");
+    const [validationResult, setValidationResult] = useState({})
     const cidades = useMemo(
         () => data ? data.map(city => ( {nome: city.nome, uf: city["regiao-imediata"]["regiao-intermediaria"]["UF"]["sigla"]} )) : null,
         [data]
@@ -19,6 +23,23 @@ const LocalData = ({ atpvData, updateAtpvData }) => {
     const cidadesDaUf = useMemo(() => (
        data ? cidades.filter(city => city.uf == selectedUf) : []
     ), [selectedUf])
+
+    useEffect(() => {
+        const schema = Atpv.pick({
+            valorVeiculo: true,
+            uf: true,
+            cidade: true,
+        })
+        const values = {
+            valorVeiculo: valorVeiculo,
+            uf: selectedUf,
+            cidade: selectedCity,
+        }
+        const result = schema.safeParse(values)
+        if(!result.success){
+            setValidationResult(z.flattenError(result.error).fieldErrors)
+        }
+    }, [dataCompra, valorVeiculo, selectedUf, selectedCity])
 
     if(isLoading) return <div>Carregando...</div>
     if(error) {
@@ -49,7 +70,7 @@ const LocalData = ({ atpvData, updateAtpvData }) => {
     return <>
         <InputLabel>Data da Venda</InputLabel>
        <DatePicker value={dataCompra} onChange={newData => {setDataCompra(newData)}} />  
-       <TextField label="Valor do Veiculo" value={valorVeiculo} onChange={e => {setValorVeiculo(e.target.value)}}/>
+       <TextField label="Valor do Veiculo" value={valorVeiculo} error={getIsValid("valorVeiculo", validationResult)} helperText={getHelpText("valorVeiculo", validationResult)} onChange={e => {setValorVeiculo(e.target.value)}}/>
        <InputLabel>Cidade/UF</InputLabel>
        <Select label="UF" value={selectedUf} onChange={handleUfChange}>
             {estadosBrasil.map(estado => <MenuItem value={estado}>{estado}</MenuItem>)}
