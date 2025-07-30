@@ -1,7 +1,7 @@
-import { Stack, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
+import { Alert, Snackbar, Stack, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
 import dayjs from "dayjs";
 
-const Finalizacao = ({ atpvData }) => {
+const Finalizacao = ({ atpvData, pushResult, setPushResult }) => {
     
     const nomesCampos = {
        tipoRegistro: "Tipo de Registro",
@@ -51,8 +51,11 @@ const Finalizacao = ({ atpvData }) => {
             <TableCell >{dayjs.isDayjs(value) ? value.format("DD/MM/YYYY") : value}</TableCell>
         </TableRow>)
     }
-    console.log('render final')
+
     return <Stack direction="row" spacing={5} sx={{ width: "90%" }}>
+    <Snackbar open={!!pushResult.message} onClose={() => setPushResult({})} anchorOrigin={{ vertical: "top", horizontal: "center" }} autoHideDuration={6000}>
+        <Alert severity={pushResult.severity} >{pushResult.message}</Alert>
+    </Snackbar>
     <Table size="small" sx={{ width: "40%" }}>
         <TableHead>
             <TableRow>

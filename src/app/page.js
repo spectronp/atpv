@@ -12,11 +12,13 @@ import Vendedor from "./_components/Vendedor";
 import Comprador from "./_components/Comprador";
 import Finalizacao from "./_components/Finalizacao";
 import { pushAtpvData } from "@/server/functions";
+import { Atpv } from "@/validation";
+import z from "zod";
 
 
 export default function Home() {
   const [currentStep, setCurrentStep] = useState(0);
-  const [pushResult, setPushResult] = useState();
+  const [pushResult, setPushResult] = useState({});
   const atpvPessoa = {
     tipo: null,
     nome: null,
@@ -52,13 +54,19 @@ export default function Home() {
 
   const handleNext = () => {
     if(currentStep == 5) {
-      pushAtpvData(atpvData.current)
+      const validation = Atpv.safeParse(atpvData.current)
+      if(!validation.success){
+        setPushResult({error: validation.error, severity: "error", message: "Algum campo contem dados invalidos"})
+        return
+      }
+      pushAtpvData(validation.data)
         .then(res => {
-          setPushResult(res)
+          setPushResult({severity: "success", message: "Sucesso"})
         })
         .catch(err => {
-          setPushResult(err)
+          setPushResult({error: err, severity: "error", message: err.toString()})
         })
+        setPushResult({ loading: true })
       return
     }
     setCurrentStep(currentStep + 1);
@@ -81,7 +89,7 @@ export default function Home() {
       case 4:
         return <Comprador atpvData={atpvData}  updateAtpvData={updateAtpvData} />
       case 5:
-        return <Finalizacao atpvData={atpvData} pushResult={pushResult} />
+        return <Finalizacao atpvData={atpvData} pushResult={pushResult} setPushResult={setPushResult} />
     }
   }
 
