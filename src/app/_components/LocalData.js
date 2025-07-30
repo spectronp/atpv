@@ -1,4 +1,4 @@
-import { getHelpText, getIsValid } from "@/utils";
+import { getHelpText, getIsValid, validate } from "@/utils";
 import { Atpv } from "@/validation";
 import { InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
@@ -11,7 +11,7 @@ const LocalData = ({ atpvData, updateAtpvData }) => {
     const fetcher = (...args) => fetch(...args).then((r) => r.json());
     const { data, error, isLoading } = useSWR("https://servicodados.ibge.gov.br/api/v1/localidades/municipios", fetcher);
     const [dataCompra, setDataCompra] = useState(atpvData.current.dataVenda ? dayjs(atpvData.current.dataVenda, "DD/MM/YYYY") : null);
-    const [valorVeiculo, setValorVeiculo] = useState(atpvData.current.valorVeiculo ?? 0);
+    const [valorVeiculo, setValorVeiculo] = useState(atpvData.current.valorVeiculo ?? null);
     const [selectedUf, setSelectedUf] = useState(atpvData.current.uf ?? "");
     const [selectedCity, setSelectedCity] = useState(atpvData.current.cidade ?? "");
     const [validationResult, setValidationResult] = useState({})
@@ -70,7 +70,7 @@ const LocalData = ({ atpvData, updateAtpvData }) => {
     return <>
         <InputLabel>Data da Venda</InputLabel>
        <DatePicker value={dataCompra} onChange={newData => {setDataCompra(newData)}} />  
-       <TextField label="Valor do Veiculo" value={valorVeiculo} error={getIsValid("valorVeiculo", validationResult)} helperText={getHelpText("valorVeiculo", validationResult)} onChange={e => {setValorVeiculo(e.target.value)}}/>
+       <TextField label="Valor do Veiculo" value={valorVeiculo} error={getIsValid("valorVeiculo", validationResult)} helperText={getHelpText("valorVeiculo", validationResult)} onChange={e => validate(e.target.value, setValorVeiculo, Atpv.shape.valorVeiculo)}/>
        <InputLabel>Cidade/UF</InputLabel>
        <Select label="UF" value={selectedUf} onChange={handleUfChange}>
             {estadosBrasil.map(estado => <MenuItem value={estado}>{estado}</MenuItem>)}
