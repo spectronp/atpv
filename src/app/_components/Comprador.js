@@ -29,13 +29,11 @@ const Comprador = ({ atpvData, updateAtpvData }) => {
     }, [tipoPessoa, cpfCnpj, nome, email, cep, endereco, numero]);
 
     useEffect(() => {
-        const schema = Pessoa.pick({
-            email: true,
-            numero: true,
+        const schema = z.object({
+            email: z.union([z.literal(""), z.email()]),
         })
         const values = {
             email: email,
-            numero: numero,
         }
         const result = schema.safeParse(values)
         if(!result.success){
@@ -43,19 +41,19 @@ const Comprador = ({ atpvData, updateAtpvData }) => {
         } else {
             setValidationResult({})
         }
-    }, [email, numero])
+    }, [email])
 
     return <>
         <Select value={tipoPessoa} onChange={e => {setTipoPessoa(e.target.value)}} label="Tipo de Pessoa">
             <MenuItem value="fisica" >Fisica</MenuItem>
             <MenuItem value="juridica" >Juridica</MenuItem>
         </Select>
-        <TextField value={cpfCnpj} onChange={e => {setCpfCnpj(e.target.value)}}label="CPF/CNPJ" />
+        <TextField value={cpfCnpj} onChange={e => validate(e.target.value, setCpfCnpj, z.coerce.number("Deve ser numero"))} label="CPF/CNPJ" />
         <TextField value={nome} onChange={e => {setNome(e.target.value)}}label="Nome" />
         <TextField value={email} error={getIsValid("email", validationResult)} helperText={getHelpText("email", validationResult)} onChange={e => {setEmail(e.target.value)}} label="Email" />
-        <TextField value={cep} onChange={e => {setCep(e.target.value)}}label="CEP" />
-        <TextField value={endereco} onChange={e => {setEndereco(e.target.value)}}label="Endereco" />
-        <TextField value={numero} error={getIsValid("numero", validationResult)} helperText={getHelpText("numero", validationResult)} onChange={e => validate(e.target.value, setNumero, Pessoa.shape.numero)} label="Numero" />
+        <TextField value={cep} onChange={e => validate(e.target.value, setCep, z.coerce.number("Deve ser numero"))} label="CEP" />
+        <TextField value={endereco} onChange={e => {setEndereco(e.target.value)}} label="Endereco" />
+        <TextField value={numero} onChange={e => validate(e.target.value, setNumero, Pessoa.shape.numero)} label="Numero" />
     </>
 }
 
