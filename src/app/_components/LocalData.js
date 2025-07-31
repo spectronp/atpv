@@ -22,6 +22,15 @@ const LocalData = ({ atpvData, updateAtpvData }) => {
        data ? cidades.filter(city => city.uf == selectedUf) : []
     ), [selectedUf])
 
+    useEffect(() => {
+        updateAtpvData({
+            dataVenda: dataCompra ? dataCompra.format("DD/MM/YYYY") : null,
+            valorVeiculo: valorVeiculo,
+            uf: selectedUf,
+            cidade: selectedCity,
+        })
+    }, [dataCompra, valorVeiculo, selectedUf, selectedCity])
+
     if(isLoading) return <div>Carregando...</div>
     if(error) {
         console.log(error)
@@ -34,15 +43,7 @@ const LocalData = ({ atpvData, updateAtpvData }) => {
     "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO"
     ];
    
-    useEffect(() => {
-        updateAtpvData({
-            dataVenda: dataCompra ? dataCompra.format("DD/MM/YYYY") : null,
-            valorVeiculo: valorVeiculo,
-            uf: selectedUf,
-            cidade: selectedCity,
-        })
-    }, [dataCompra, valorVeiculo, selectedUf, selectedCity])
-    
+        
     return <>
         <InputLabel>Data da Venda</InputLabel>
        <DatePicker value={dataCompra} onChange={newData => {setDataCompra(newData)}} />  
