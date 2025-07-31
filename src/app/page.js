@@ -73,6 +73,7 @@ export default function Home() {
   }
 
   const handleBack = () => {
+    if(currentStep == 0) return
     setCurrentStep(currentStep - 1);
   }
 
