@@ -21,7 +21,7 @@ export const Atpv = z.object({
     chassi: z.string(),
     crv: z.string(),
     dataEmissaoCrv: z.string(),
-    numeroViaCrv: z.number(),
+    numeroViaCrv: z.coerce.number(),
     codigoSegurancaCrv: z.string(),
     anoFabricacao: z.coerce.number("Deve ser um numero"), // TODO: could set a max and minimum
     anoModelo: z.coerce.number("Deve ser um numero"),
