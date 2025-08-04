@@ -54,4 +54,4 @@ Agora é so abrir seu navegador em `http://localhost:3000`
 - [X] Adicionar .env.example
 - [X] Criar README.md
 - [X] Trocar Zod pelo Yup
-- [ ] Fazer Deploy
+- [X] Fazer Deploy
