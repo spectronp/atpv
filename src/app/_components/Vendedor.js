@@ -1,8 +1,7 @@
-import { getHelpText, getIsValid, validate } from "@/utils";
-import { Pessoa } from "@/validation";
+import { handleInput, isValid } from "@/utils";
 import { MenuItem, Select, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
-import z from "zod";
+import { number, string } from "yup";
 
 const Vendedor = ({ atpvData, updateAtpvData }) => {
     const [tipoPessoa, setTipoPessoa] = useState(atpvData.current.vendedor.tipo ?? "")
@@ -12,21 +11,20 @@ const Vendedor = ({ atpvData, updateAtpvData }) => {
     const [cep, setCep] = useState(atpvData.current.vendedor.cep ?? "")
     const [endereco, setEndereco] = useState(atpvData.current.vendedor.endereco ?? "")
     const [numero, setNumero] = useState(atpvData.current.vendedor.numero ?? "")
-    const [validationResult, setValidationResult] = useState({})
+    const [emailValidation, setEmailValidation] = useState({})
 
     useEffect(() => {
-        const schema = z.object({
-            email: z.union([z.literal(""), z.email()]),
-        })
-        const values = {
-            email: email,
+        if(email == "") {
+            setEmailValidation(true)
+            return
         }
-        const result = schema.safeParse(values)
-        if(!result.success){
-            setValidationResult(z.flattenError(result.error).fieldErrors)
-        } else {
-            setValidationResult({})
+        const schema = string().email("Email invalido")
+        let result
+        const runIsValid = async () => {
+            result = await isValid(email, schema)
+            setEmailValidation(result)
         }
+        runIsValid()
     }, [email])
 
     useEffect(() => {
@@ -48,12 +46,12 @@ const Vendedor = ({ atpvData, updateAtpvData }) => {
             <MenuItem value="fisica" >Fisica</MenuItem>
             <MenuItem value="juridica" >Juridica</MenuItem>
         </Select>
-        <TextField value={cpfCnpj} onChange={e => validate(e.target.value, setCpfCnpj, z.coerce.number("Deve ser numero"))} label="CPF/CNPJ" />
+        <TextField value={cpfCnpj} onChange={e => handleInput(e.target.value, setCpfCnpj, number("Deve ser numero"))} label="CPF/CNPJ" />
         <TextField value={nome} onChange={e => {setNome(e.target.value)}} label="Nome" />
-        <TextField value={email} error={getIsValid("email", validationResult)} helperText={getHelpText("email", validationResult)} onChange={e => {setEmail(e.target.value)}} label="Email" />
-        <TextField value={cep} onChange={e => validate(e.target.value, setCep, z.coerce.number("Deve ser numero"))} label="CEP" />
+        <TextField value={email} error={!emailValidation} helperText={!emailValidation ? "Email invalido" : ""} onChange={e => {setEmail(e.target.value)}} label="Email" />
+        <TextField value={cep} onChange={e => handleInput(e.target.value, setCep, number("Deve ser numero"))} label="CEP" />
         <TextField value={endereco} onChange={e => {setEndereco(e.target.value)}}label="Endereco" />
-        <TextField value={numero} error={getIsValid("numero", validationResult)} helperText={getHelpText("numero", validationResult)} onChange={e => validate(e.target.value, setNumero, Pessoa.shape.numero)} label="Numero" />
+        <TextField value={numero} onChange={e => handleInput(e.target.value, setNumero, number("Deve ser numero"))} label="Numero" />
     </>
 }
 

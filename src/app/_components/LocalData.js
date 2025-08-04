@@ -1,10 +1,10 @@
-import { validate } from "@/utils";
-import { Atpv } from "@/validation";
+import { handleInput } from "@/utils";
 import { InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { useEffect, useMemo, useState } from "react";
 import useSWR from "swr";
+import { number } from "yup";
 
 const LocalData = ({ atpvData, updateAtpvData }) => {
     const fetcher = (...args) => fetch(...args).then((r) => r.json());
@@ -47,7 +47,7 @@ const LocalData = ({ atpvData, updateAtpvData }) => {
     return <>
         <InputLabel>Data da Venda</InputLabel>
        <DatePicker value={dataCompra} onChange={newData => {setDataCompra(newData)}} />  
-       <TextField label="Valor do Veiculo" value={valorVeiculo} onChange={e => validate(e.target.value, setValorVeiculo, Atpv.shape.valorVeiculo)}/>
+       <TextField label="Valor do Veiculo" value={valorVeiculo} onChange={e => handleInput(e.target.value, setValorVeiculo, number("Deve ser numero"))}/>
        <InputLabel>Cidade/UF</InputLabel>
        <Select label="UF" value={selectedUf} onChange={e => {setSelectedUf(e.target.value)}}>
             {estadosBrasil.map(estado => <MenuItem value={estado}>{estado}</MenuItem>)}

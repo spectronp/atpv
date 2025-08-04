@@ -2,15 +2,16 @@
 
 import { db } from "@/db";
 import { atpv, pessoa } from "@/db/schema";
+import { parseValue } from "@/utils";
 import { Atpv, Pessoa } from "@/validation";
 import { eq } from "drizzle-orm";
 
 export const pushAtpvData = async atpvData => {
-    const valid = Atpv.safeParse(atpvData)
-    if(!valid.success) {
-        return valid.error
+    const validation = await parseValue(atpvData, Atpv)
+    if(!validation.success) {
+        return validation
     }
-    atpvData = valid.data
+    atpvData = validation.data
 
     const result_vendedor = await db.select({ id: pessoa.id }).from(pessoa).where(eq(pessoa.cpfCnpj, atpvData.vendedor.cpfCnpj))
     const result_comprador = await db.select({ id: pessoa.id }).from(pessoa).where(eq(pessoa.cpfCnpj, atpvData.comprador.cpfCnpj))
@@ -31,5 +32,7 @@ export const pushAtpvData = async atpvData => {
     atpvData.comprador = comprador_id 
 
     await db.insert(atpv).values(atpvData)
+
+    return {success: true}
 }
 

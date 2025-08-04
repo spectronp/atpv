@@ -12,9 +12,6 @@ import Vendedor from "./_components/Vendedor";
 import Comprador from "./_components/Comprador";
 import Finalizacao from "./_components/Finalizacao";
 import { pushAtpvData } from "@/server/functions";
-import { Atpv } from "@/validation";
-import z from "zod";
-
 
 export default function Home() {
   const [currentStep, setCurrentStep] = useState(0);
@@ -54,13 +51,12 @@ export default function Home() {
 
   const handleNext = () => {
     if(currentStep == 5) {
-      const validation = Atpv.safeParse(atpvData.current)
-      if(!validation.success){
-        setPushResult({error: validation.error, severity: "error", message: "Algum campo contem dados invalidos"})
-        return
-      }
-      pushAtpvData(validation.data)
-        .then(res => {
+      pushAtpvData(atpvData.current)
+        .then(result => {
+          if(!result.success){
+            setPushResult({severity: "error", message: result.error.toString()})
+            return
+          }
           setPushResult({severity: "success", message: "Sucesso"})
         })
         .catch(err => {

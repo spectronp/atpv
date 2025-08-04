@@ -1,11 +1,22 @@
+export const isValid = async (value, schema) => {
+    try {
+        await schema.validate(value)
+    } catch (err) {
+        return false
+    }
+    return true
+}
 
-export const getIsValid = (inputName, validationResult) => !!validationResult[inputName]
+export const handleInput = async (value, setInput, schema) => {
+    if((await isValid(value, schema) || value == "")) setInput(value)
+}
 
-export const getHelpText = (inputName, validationResult) => validationResult[inputName] ? validationResult[inputName][0] : ''
-
-export const validate = (input, setInput, type) => {
-    const result = type.safeParse(input)
-    if(!result.success) return 
-
-    setInput(input)
+export const parseValue = async (value, schema) => {
+    let parsed
+    try {
+        parsed = await schema.cast(value)
+    } catch(err) {
+        return {success: false, error: err}
+    }
+    return {success: true, data: parsed}
 }

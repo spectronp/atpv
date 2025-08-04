@@ -1,9 +1,9 @@
-import { validate } from "@/utils";
-import { Atpv } from "@/validation";
+import { handleInput } from "@/utils";
 import { Stack, TextField } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
+import { number } from "yup";
 
 const DadosVeiculo = ({ atpvData, updateAtpvData }) => {
     const [placa, setPlaca] = useState(atpvData.current.placa ?? "");
@@ -39,11 +39,11 @@ const DadosVeiculo = ({ atpvData, updateAtpvData }) => {
         <TextField value={chassi} onChange={e => {setChassi(e.target.value)}} label="Chassi" size="small"/>
         <TextField value={crv} onChange={e => {setCrv(e.target.value)}} label="CRV" size="small"/>
         <DatePicker label="Data Emissao CRV" onChange={newDate => {setDataEmissaoCrv(newDate)}} />
-        <TextField value={numeroViaCrv} onChange={e => validate(e.target.value, setNumeroViaCrv, Atpv.shape.numeroViaCrv)} label="Numero da Via CRV" size="small"/>
+        <TextField value={numeroViaCrv} onChange={e => handleInput(e.target.value, setNumeroViaCrv, number("Deve ser numero"))} label="Numero da Via CRV" size="small"/>
         <TextField value={codigoSegurancaCrv} onChange={e => {setCodigoSegurancaCrv(e.target.value)}} label="Codigo de Seguranca CRV" size="small"/>
-        <TextField value={anoFabricacao} onChange={e => validate(e.target.value, setAnoFabricacao, Atpv.shape.anoFabricacao)} label="Ano Fabricacao" size="small"/>
-        <TextField value={anoModelo} onChange={e => validate(e.target.value, setAnoModelo, Atpv.shape.anoModelo)} label="Ano Modelo" size="small"/>
-        <TextField value={quilometragem} onChange={e => validate(e.target.value, setQuilometragem, Atpv.shape.quilometragem)} label="Quilometragem" size="small"/>
+        <TextField value={anoFabricacao} onChange={e => handleInput(e.target.value, setAnoFabricacao, number("Deve ser numero"))} label="Ano Fabricacao" size="small"/>
+        <TextField value={anoModelo} onChange={e => handleInput(e.target.value, setAnoModelo, number("Deve ser numero"))} label="Ano Modelo" size="small"/>
+        <TextField value={quilometragem} onChange={e => handleInput(e.target.value, setQuilometragem, number("Deve ser numero"))} label="Quilometragem" size="small"/>
     </Stack>
 }
 
